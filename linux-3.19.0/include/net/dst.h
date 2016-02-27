@@ -17,6 +17,8 @@
 #include <net/neighbour.h>
 #include <asm/processor.h>
 
+#include <linux/ovbench.h>
+
 #define DST_GC_MIN	(HZ/10)
 #define DST_GC_INC	(HZ/2)
 #define DST_GC_MAX	(120*HZ)
@@ -404,6 +406,13 @@ static inline int dst_neigh_output(struct dst_entry *dst, struct neighbour *n,
 				   struct sk_buff *skb)
 {
 	const struct hh_cache *hh;
+
+	if (SKB_OVBENCH (skb)) {
+		if (SKB_OVBENCH_ENCAPED (skb))
+			skb->dst_neigh_output_in_encaped = rdtsc ();
+		else
+			skb->dst_neigh_output_in = rdtsc ();
+	}
 
 	if (dst->pending_confirm) {
 		unsigned long now = jiffies;

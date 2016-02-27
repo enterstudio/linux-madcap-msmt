@@ -80,6 +80,8 @@
 #include <linux/netlink.h>
 #include <linux/tcp.h>
 
+#include <linux/ovbench.h>
+
 int sysctl_ip_default_ttl __read_mostly = IPDEFTTL;
 EXPORT_SYMBOL(sysctl_ip_default_ttl);
 
@@ -104,6 +106,13 @@ int __ip_local_out(struct sk_buff *skb)
 int ip_local_out_sk(struct sock *sk, struct sk_buff *skb)
 {
 	int err;
+
+	if (SKB_OVBENCH (skb)) {
+		if (SKB_OVBENCH_ENCAPED (skb))
+			skb->ip_local_out_sk_in_encaped = rdtsc ();
+		else
+			skb->ip_local_out_sk_in = rdtsc ();
+	}
 
 	err = __ip_local_out(skb);
 	if (likely(err == 1))
@@ -171,6 +180,9 @@ static inline int ip_finish_output2(struct sk_buff *skb)
 	unsigned int hh_len = LL_RESERVED_SPACE(dev);
 	struct neighbour *neigh;
 	u32 nexthop;
+
+	if (SKB_OVBENCH (skb))
+		skb->ip_finish_output2_in = rdtsc ();
 
 	if (rt->rt_type == RTN_MULTICAST) {
 		IP_UPD_PO_STATS(dev_net(dev), IPSTATS_MIB_OUTMCAST, skb->len);
@@ -334,6 +346,9 @@ int ip_mc_output(struct sock *sk, struct sk_buff *skb)
 int ip_output(struct sock *sk, struct sk_buff *skb)
 {
 	struct net_device *dev = skb_dst(skb)->dev;
+
+	if (SKB_OVBENCH (skb))
+		skb->ip_output_in = rdtsc ();
 
 	IP_UPD_PO_STATS(dev_net(dev), IPSTATS_MIB_OUT, skb->len);
 

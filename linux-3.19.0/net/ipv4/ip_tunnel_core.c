@@ -46,6 +46,8 @@
 #include <net/netns/generic.h>
 #include <net/rtnetlink.h>
 
+#include <linux/ovbench.h>
+
 int iptunnel_xmit(struct sock *sk, struct rtable *rt, struct sk_buff *skb,
 		  __be32 src, __be32 dst, __u8 proto,
 		  __u8 tos, __u8 ttl, __be16 df, bool xnet)
@@ -53,6 +55,11 @@ int iptunnel_xmit(struct sock *sk, struct rtable *rt, struct sk_buff *skb,
 	int pkt_len = skb->len;
 	struct iphdr *iph;
 	int err;
+
+	if (SKB_OVBENCH (skb)) {
+		skb->iptunnel_xmit_in = rdtsc ();
+		skb->ovbench_encaped = 1;
+	}
 
 	skb_scrub_packet(skb, xnet);
 

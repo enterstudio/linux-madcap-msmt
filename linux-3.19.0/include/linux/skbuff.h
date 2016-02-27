@@ -663,6 +663,11 @@ struct sk_buff {
 				*data;
 	unsigned int		truesize;
 	atomic_t		users;
+
+	/* for overlay benchmarking. */
+	__u8	ovbench_type;
+	__u8	ovbench_encaped;
+	__u64	ovbench_timestamp[16];
 };
 
 #ifdef __KERNEL__

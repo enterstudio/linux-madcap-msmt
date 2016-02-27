@@ -138,6 +138,8 @@
 
 #include "net-sysfs.h"
 
+#include <linux/ovbench.h>
+
 /* Instead of increasing this, you should create a hash table. */
 #define MAX_GRO_SKBS 8
 
@@ -2968,6 +2970,13 @@ out:
 
 int dev_queue_xmit(struct sk_buff *skb)
 {
+	if (SKB_OVBENCH (skb)) {
+		if (SKB_OVBENCH_ENCAPED (skb))
+			skb->dev_queue_xmit_in_encaped = rdtsc ();
+		else
+			skb->dev_queue_xmit_in = rdtsc ();
+	}
+
 	return __dev_queue_xmit(skb, NULL);
 }
 EXPORT_SYMBOL(dev_queue_xmit);

@@ -5,6 +5,8 @@
  * For inserting rdtsc in each points of packet TX data path.
  */
 
+#define OVBENCH_TIMESTAMPNUM	20
+
 static inline __u64
 rdtsc(void)
 {
@@ -39,6 +41,8 @@ rdtsc(void)
 #define dst_neigh_output_in_encaped	ovbench_timestamp[10]
 #define dev_queue_xmit_in_encaped	ovbench_timestamp[11]
 
+#define ip_routing_start		ovbench_timestamp[17]
+#define ip_routing_end			ovbench_timestamp[18]
 
 
 #define ipip_tunnel_xmit_in 		ovbench_timestamp[15]
@@ -71,7 +75,7 @@ rdtsc(void)
 
 
 /* used by raven only. not in sk_buff. */
-#define raven_xmit_in			ovbench_timestamp[16]
+#define raven_xmit_in			ovbench_timestamp[19]
 
 
 #endif /* _OVBENCH_USER_H_ */

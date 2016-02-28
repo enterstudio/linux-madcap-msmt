@@ -36,6 +36,8 @@
 #include <linux/sched.h>
 #include <net/flow_keys.h>
 
+#include <linux/ovbench.h>
+
 /* A. Checksumming of received packets by device.
  *
  * CHECKSUM_NONE:
@@ -667,7 +669,7 @@ struct sk_buff {
 	/* for overlay benchmarking. */
 	__u8	ovbench_type;
 	__u8	ovbench_encaped;
-	__u64	ovbench_timestamp[16];
+	__u64	ovbench_timestamp[OVBENCH_TIMESTAMPNUM];
 };
 
 #ifdef __KERNEL__

@@ -791,6 +791,8 @@ EXPORT_SYMBOL(consume_skb);
 
 static void __copy_skb_header(struct sk_buff *new, const struct sk_buff *old)
 {
+	int n;
+
 	new->tstamp		= old->tstamp;
 	/* We do not copy old->sk */
 	new->dev		= old->dev;
@@ -804,22 +806,9 @@ static void __copy_skb_header(struct sk_buff *new, const struct sk_buff *old)
 	/* copy ovbench parms */
 	new->ovbench_type	= old->ovbench_type;
 	new->ovbench_encaped	= old->ovbench_encaped;
-	new->ovbench_timestamp[0] = old->ovbench_timestamp[0];
-	new->ovbench_timestamp[1] = old->ovbench_timestamp[1];
-	new->ovbench_timestamp[2] = old->ovbench_timestamp[2];
-	new->ovbench_timestamp[3] = old->ovbench_timestamp[3];
-	new->ovbench_timestamp[4] = old->ovbench_timestamp[4];
-	new->ovbench_timestamp[5] = old->ovbench_timestamp[5];
-	new->ovbench_timestamp[6] = old->ovbench_timestamp[6];
-	new->ovbench_timestamp[7] = old->ovbench_timestamp[7];
-	new->ovbench_timestamp[8] = old->ovbench_timestamp[8];
-	new->ovbench_timestamp[9] = old->ovbench_timestamp[9];
-	new->ovbench_timestamp[10] = old->ovbench_timestamp[10];
-	new->ovbench_timestamp[11] = old->ovbench_timestamp[11];
-	new->ovbench_timestamp[12] = old->ovbench_timestamp[12];
-	new->ovbench_timestamp[13] = old->ovbench_timestamp[13];
-	new->ovbench_timestamp[14] = old->ovbench_timestamp[14];
-	new->ovbench_timestamp[15] = old->ovbench_timestamp[15];
+
+	for (n = 0; n < OVBENCH_TIMESTAMPNUM; n++)
+		new->ovbench_timestamp[n] = old->ovbench_timestamp[n];
 
 	/* Note : this field could be in headers_start/headers_end section
 	 * It is not yet because we do not want to have a 16 bit hole

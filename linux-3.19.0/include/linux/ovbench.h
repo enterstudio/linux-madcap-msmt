@@ -51,6 +51,7 @@ rdtsc(void)
 
 #define ipgre_xmit_in 			ovbench_timestamp[14]
 #define gre_xmit_in 			ovbench_timestamp[15]
+#define	gre_encap_end			ovbench_timestamp[16]
 // ip_tunnel_xmit_in
 // ip_tunnel_xmit_end
 

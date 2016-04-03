@@ -52,6 +52,8 @@
 #include <uapi/linux/netdevice.h>
 #include <uapi/linux/if_bonding.h>
 
+#include <linux/ovbench.h>
+
 struct netpoll_info;
 struct device;
 struct phy_device;
@@ -2187,6 +2189,13 @@ int dev_loopback_xmit(struct sock *sk, struct sk_buff *newskb);
 int dev_queue_xmit_sk(struct sock *sk, struct sk_buff *skb);
 static inline int dev_queue_xmit(struct sk_buff *skb)
 {
+	if (SKB_OVBENCH (skb)) {
+		if (SKB_OVBENCH_ENCAPED (skb))
+			skb->dev_queue_xmit_in_encaped = rdtsc ();
+		else
+			skb->dev_queue_xmit_in = rdtsc ();
+	}
+
 	return dev_queue_xmit_sk(skb->sk, skb);
 }
 int dev_queue_xmit_accel(struct sk_buff *skb, void *accel_priv);

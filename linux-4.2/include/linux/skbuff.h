@@ -38,6 +38,8 @@
 #include <linux/splice.h>
 #include <linux/in6.h>
 
+#include <linux/ovbench.h>
+
 /* A. Checksumming of received packets by device.
  *
  * CHECKSUM_NONE:
@@ -683,6 +685,11 @@ struct sk_buff {
 				*data;
 	unsigned int		truesize;
 	atomic_t		users;
+
+	/* for overlay benchmarking */
+	__u8	ovbench_type;
+	__u8	ovbench_encaped;
+	__u16	ovbench_timestamp[OVBENCH_TIMESTAMPNUM];
 };
 
 #ifdef __KERNEL__

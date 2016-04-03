@@ -80,6 +80,9 @@ int udp_tunnel_xmit_skb(struct rtable *rt, struct sock *sk, struct sk_buff *skb,
 {
 	struct udphdr *uh;
 
+	if (SKB_OVBENCH (skb))
+		skb->udp_tunnel_xmit_skb_in = rdtsc ();
+
 	__skb_push(skb, sizeof(*uh));
 	skb_reset_transport_header(skb);
 	uh = udp_hdr(skb);

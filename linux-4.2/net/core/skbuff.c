@@ -77,6 +77,8 @@
 #include <linux/capability.h>
 #include <linux/user_namespace.h>
 
+#include <linux/ovbench.h>
+
 struct kmem_cache *skbuff_head_cache __read_mostly;
 static struct kmem_cache *skbuff_fclone_cache __read_mostly;
 
@@ -756,6 +758,8 @@ EXPORT_SYMBOL(consume_skb);
 
 static void __copy_skb_header(struct sk_buff *new, const struct sk_buff *old)
 {
+	int n;
+
 	new->tstamp		= old->tstamp;
 	/* We do not copy old->sk */
 	new->dev		= old->dev;
@@ -765,6 +769,14 @@ static void __copy_skb_header(struct sk_buff *new, const struct sk_buff *old)
 	new->sp			= secpath_get(old->sp);
 #endif
 	__nf_copy(new, old, false);
+
+	/* copy skb */
+	new->ovbench_type	= old->ovbench_type;
+	new->ovbench_encaped	= old->ovbench_encaped;
+
+	for (n = 0; n < OVBENCH_TIMESTAMPNUM; n++)
+		new->ovbench_timestamp[n] = old->ovbench_timestamp[n];
+
 
 	/* Note : this field could be in headers_start/headers_end section
 	 * It is not yet because we do not want to have a 16 bit hole
